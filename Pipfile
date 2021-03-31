@@ -1,0 +1,19 @@
+[[source]]
+url = "https://pypi.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+django = "*"
+environs = "*"
+
+[dev-packages]
+flake8 = "*"
+isort = "*"
+rich = "*"
+coverage = "*"
+django-extensions = "*"
+django-debug-toolbar = "*"
+
+[requires]
+python_version = "3.8"
