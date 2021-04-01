@@ -1,5 +1,6 @@
 from django.test import TestCase, tag
 from django.urls import reverse
+from django.core.paginator import Paginator
 
 from ..views import PostList, PostDetail
 from .mixins import SetUpMixin
@@ -19,6 +20,8 @@ class ViewsTest(SetUpMixin, TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.resolver_match.func.__name__, PostList.as_view().__name__)
         self.assertIn('post_list', response.context)
+        self.assertIn('paginator', response.context)
+        self.assertIsInstance(response.context.get('paginator'), Paginator)
         self.assertTemplateUsed(response, 'blog/post_list.html')
 
     def test_post_detail_get(self):
