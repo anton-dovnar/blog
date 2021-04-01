@@ -2,6 +2,7 @@ from django.db import models
 from django.utils import timezone
 from django.utils.text import slugify
 from django.contrib.auth import get_user_model
+from django.urls import reverse
 
 User = get_user_model()
 
@@ -32,3 +33,7 @@ class Post(models.Model):
     def save(self, **kwargs):
         self.slug = slugify(self.title)
         super().save(**kwargs)
+
+    def get_absolute_url(self):
+        return reverse(
+            'blog:post-detail', args=[self.published.year, self.published.month, self.published.day, self.slug])
