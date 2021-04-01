@@ -22,6 +22,8 @@ class Post(models.Model):
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
 
     class Meta:
+        verbose_name = 'Post'
+        verbose_name_plural = 'Posts'
         ordering = ('-published',)
 
     def __str__(self):
