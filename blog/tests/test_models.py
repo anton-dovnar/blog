@@ -1,15 +1,12 @@
 from django.test import TestCase, tag
 from django.utils.text import slugify
-from model_mommy import mommy
 
-from blog.models import Post
+from ..models import Post
+from .mixins import SetUpMixin
 
 
 @tag('blog-models')
-class ModelsTest(TestCase):
-
-    def setUp(self):
-        self.post = mommy.make(Post)
+class ModelsTest(SetUpMixin, TestCase):
 
     def test_post_creation(self):
         self.assertIsInstance(self.post, Post)
