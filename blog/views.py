@@ -7,6 +7,7 @@ from .models import Post
 class PostList(generic.ListView):
     model = Post
     context_object_name = 'post_list'
+    paginate_by = 5
     template_name = 'blog/post_list.html'
 
 
