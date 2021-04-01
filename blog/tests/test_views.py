@@ -19,7 +19,7 @@ class ViewsTest(SetUpMixin, TestCase):
         response = self.client.get(reverse('blog:post-list'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.resolver_match.func.__name__, PostList.as_view().__name__)
-        self.assertIn('post_list', response.context)
+        self.assertIn('posts', response.context)
         self.assertIn('paginator', response.context)
         self.assertIsInstance(response.context.get('paginator'), Paginator)
         self.assertTemplateUsed(response, 'blog/post_list.html')
