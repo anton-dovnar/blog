@@ -1,8 +1,8 @@
+from django.core.paginator import Paginator
 from django.test import TestCase, tag
 from django.urls import reverse
-from django.core.paginator import Paginator
 
-from ..views import PostList, PostDetail
+from ..views import PostDetail, PostList
 from .mixins import SetUpMixin
 
 
