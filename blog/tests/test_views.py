@@ -1,8 +1,9 @@
 from django.core.paginator import Paginator
-from django.test import TestCase, tag
+from django.test import TestCase, override_settings, tag
 from django.urls import reverse
 
-from ..views import PostDetail, PostList
+from ..forms import EmailPostForm
+from ..views import PostDetail, PostList, PostShare
 from .mixins import SetUpMixin
 
 
@@ -11,7 +12,7 @@ class ViewsTest(SetUpMixin, TestCase):
 
     def test_post_list_get(self):
         """
-        - url namespace - ('blog:post-list')
+        - reverse - ('blog:post-list')
         - request METHOD - GET
         - view - PostList
         """
@@ -26,7 +27,7 @@ class ViewsTest(SetUpMixin, TestCase):
 
     def test_post_detail_get(self):
         """
-        - url namespace - ('blog:post-detail')
+        - reverse - ('blog:post-detail')
         - request METHOD - GET
         - view - PostDetail
         """
@@ -39,3 +40,38 @@ class ViewsTest(SetUpMixin, TestCase):
         self.assertEqual(response.resolver_match.func.__name__, PostDetail.as_view().__name__)
         self.assertIn('post', response.context)
         self.assertTemplateUsed(response, 'blog/post_detail.html')
+
+    def test_post_share_get(self):
+        """
+        - reverse - ('blog:post-share')
+        - request METHOD - GET
+        - view - PostShare
+        """
+
+        self.post.status = 'published'
+        self.post.save()
+        response = self.client.get(reverse('blog:post-share', args=[self.post.pk]))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.resolver_match.func.__name__, PostShare.as_view().__name__)
+        self.assertIn('form', response.context)
+        self.assertIsInstance(response.context.get('form'), EmailPostForm)
+        self.assertTemplateUsed(response, 'blog/post_share.html')
+
+    @override_settings(EMAIL_BACKEND='django.core.mail.backends.console.EmailBackend')
+    def test_post_share_post(self):
+        """
+        - reverse - ('blog:post-share')
+        - request METHOD - POST
+        - view - Post Share
+        """
+
+        self.post.status = 'published'
+        self.post.save()
+        data = {
+            'name': 'Ivan',
+            'email': 'ivan@gmail.com',
+            'to': 'vasily@gmail.com',
+            'comments': 'Hello, interesting content!',
+        }
+        response = self.client.post(reverse('blog:post-share', args=[self.post.pk]), data=data)
+        self.assertRedirects(response, reverse('blog:post-list'))
