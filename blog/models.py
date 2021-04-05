@@ -3,6 +3,7 @@ from django.db import models
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
+from taggit.managers import TaggableManager
 
 User = get_user_model()
 
@@ -21,6 +22,8 @@ class Post(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
     status = models.CharField(max_length=10, choices=STATUS_CHOICES, default='draft')
+
+    tags = TaggableManager()
 
     class Meta:
         verbose_name = 'Post'

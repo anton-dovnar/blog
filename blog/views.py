@@ -4,8 +4,9 @@ from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.decorators.debug import sensitive_post_parameters
+from taggit.models import Tag
 
-from .forms import EmailPostForm
+from .forms import CommentForm, EmailPostForm
 from .models import Post
 
 
@@ -15,11 +16,30 @@ class PostList(generic.ListView):
     paginate_by = 5
     template_name = 'blog/post_list.html'
 
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        tag_slug = self.kwargs.get('tag_slug', None)
 
-class PostDetail(generic.DetailView):
+        if tag_slug:
+            tag = get_object_or_404(Tag, slug=tag_slug)
+            queryset = queryset.filter(tags__in=[tag])
+
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        tag = self.kwargs.get('tag_slug', None)
+        if tag:
+            context['tag'] = tag
+        return context
+
+
+class PostDetail(SuccessMessageMixin, generic.edit.FormMixin, generic.DetailView):
     model = Post
+    form_class = CommentForm
     context_object_name = 'post'
     template_name = 'blog/post_detail.html'
+    success_message = 'Your comment has been added.'
 
     def get_object(self):
         post = get_object_or_404(
@@ -31,6 +51,31 @@ class PostDetail(generic.DetailView):
             published__day=self.kwargs['day']
         )
         return post
+
+    def get_success_url(self):
+        post = self.get_object()
+        return post.get_absolute_url()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        post = context['post']
+        comments = post.comments.filter(active=True)
+        context['comments'] = comments
+        return context
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
+    def form_valid(self, form):
+        post = self.get_object()
+        new_comment = form.save(commit=False)
+        new_comment.post = post
+        new_comment.save()
+        return super().form_valid(form)
 
 
 @method_decorator(sensitive_post_parameters(), name='post')

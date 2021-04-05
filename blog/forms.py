@@ -2,7 +2,7 @@ from django import forms
 from django.conf import settings
 from django.core.mail import send_mail
 
-from .models import Post
+from .models import Comment, Post
 
 
 class EmailPostForm(forms.Form):
@@ -20,3 +20,10 @@ class EmailPostForm(forms.Form):
         subject = f"{cd['name']} recommends read {post.title}"
         message = f"Read {post.title} at {post_url}\n\n {cd['name']}'s comments: {cd['comments']}"
         send_mail(subject, message, settings.EMAIL_HOST_USER, [cd['to']], fail_silently=True)
+
+
+class CommentForm(forms.ModelForm):
+
+    class Meta:
+        model = Comment
+        fields = ('name', 'email', 'body')

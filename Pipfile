@@ -7,6 +7,8 @@ name = "pypi"
 django = "*"
 environs = "*"
 model-mommy = "*"
+django-crispy-forms = "*"
+django-taggit = "*"
 
 [dev-packages]
 flake8 = "*"
@@ -15,6 +17,7 @@ rich = "*"
 coverage = "*"
 django-extensions = "*"
 django-debug-toolbar = "*"
+ipython = "*"
 
 [requires]
 python_version = "3.8"
