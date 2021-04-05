@@ -1,6 +1,6 @@
 from model_mommy import mommy
 
-from ..models import Post
+from ..models import Post, Comment
 
 
 class SetUpMixin:
@@ -10,3 +10,4 @@ class SetUpMixin:
 
     def setUp(self):
         self.post = mommy.make(Post)
+        self.comment = mommy.make(Comment)
