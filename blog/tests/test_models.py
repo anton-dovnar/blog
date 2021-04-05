@@ -1,7 +1,7 @@
 from django.test import TestCase, tag
 from django.utils.text import slugify
 
-from ..models import Post, Comment
+from ..models import Comment, Post
 from .mixins import SetUpMixin
 
 

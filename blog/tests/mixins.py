@@ -1,6 +1,6 @@
 from model_mommy import mommy
 
-from ..models import Post, Comment
+from ..models import Comment, Post
 
 
 class SetUpMixin:
