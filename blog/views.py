@@ -1,5 +1,5 @@
 from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.postgres.search import SearchVector
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.db.models import Count
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
@@ -109,8 +109,11 @@ def post_search(request):
         form = SearchForm(request.GET)
         if form.is_valid():
             query = form.cleaned_data['query']
-            results = Post.objects.filter(
-                status='published').annotate(search=SearchVector('title', 'body')).filter(search=query)
+            search_vector = SearchVector('title', weight='A') + SearchVector('body', weight='B')
+            search_query = SearchQuery(query)
+            results = Post.objects.filter(status='published') \
+                                  .annotate(rank=SearchRank(search_vector, search_query)) \
+                                  .filter(rank__gte=0.3).order_by('-rank')
             return render(request, 'blog/search.html', {'query': query, 'results': results})
 
     return redirect('blog:post-list')
