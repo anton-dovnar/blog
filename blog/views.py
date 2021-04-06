@@ -1,4 +1,5 @@
 from django.contrib.messages.views import SuccessMessageMixin
+from django.db.models import Count
 from django.shortcuts import get_object_or_404
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -60,6 +61,10 @@ class PostDetail(SuccessMessageMixin, generic.edit.FormMixin, generic.DetailView
         context = super().get_context_data(**kwargs)
         post = context['post']
         comments = post.comments.filter(active=True)
+        post_tags_pks = post.tags.values_list('pk', flat=True)
+        similar_posts = Post.objects.filter(status='published', tags__in=post_tags_pks).exclude(pk=post.pk)
+        similar_posts = similar_posts.annotate(same_tags=Count('tags')).order_by('-same_tags', '-published')[:4]
+        context['similar_posts'] = similar_posts
         context['comments'] = comments
         return context
 

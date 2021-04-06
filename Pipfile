@@ -9,6 +9,7 @@ environs = "*"
 model-mommy = "*"
 django-crispy-forms = "*"
 django-taggit = "*"
+markdown = "*"
 
 [dev-packages]
 flake8 = "*"
