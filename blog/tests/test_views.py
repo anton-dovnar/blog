@@ -2,7 +2,7 @@ from django.core.paginator import Paginator
 from django.test import TestCase, override_settings, tag
 from django.urls import reverse
 
-from ..forms import Comment, EmailPostForm
+from ..forms import EmailPostForm
 from ..views import PostDetail, PostList, PostShare
 from .mixins import SetUpMixin
 
@@ -54,7 +54,7 @@ class ViewsTest(SetUpMixin, TestCase):
         self.assertIn('post', response.context)
         self.assertTemplateUsed(response, 'blog/post_detail.html')
 
-    def test_post_detail_post(self):
+    def test_post_detail_comment_post(self):
         """
         - reverse - ('blog:post-detail')
         - request METHOD - GET

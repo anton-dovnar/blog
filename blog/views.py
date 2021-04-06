@@ -1,13 +1,15 @@
 from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.postgres.search import SearchVector
 from django.db.models import Count
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
 from django.views import generic
 from django.views.decorators.debug import sensitive_post_parameters
+from django.views.decorators.http import require_GET
 from taggit.models import Tag
 
-from .forms import CommentForm, EmailPostForm
+from .forms import CommentForm, EmailPostForm, SearchForm
 from .models import Post
 
 
@@ -95,3 +97,20 @@ class PostShare(SuccessMessageMixin, generic.FormView):
         post_url = self.request.build_absolute_uri(post.get_absolute_url())
         form.send(post, post_url)
         return super().form_valid(form)
+
+
+@require_GET
+def post_search(request):
+    form = SearchForm()
+    query = None
+    results = []
+
+    if 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            results = Post.objects.filter(
+                status='published').annotate(search=SearchVector('title', 'body')).filter(search=query)
+            return render(request, 'blog/search.html', {'query': query, 'results': results})
+
+    return redirect('blog:post-list')
