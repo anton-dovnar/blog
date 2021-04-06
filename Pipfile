@@ -10,6 +10,7 @@ model-mommy = "*"
 django-crispy-forms = "*"
 django-taggit = "*"
 markdown = "*"
+psycopg2 = "*"
 
 [dev-packages]
 flake8 = "*"
