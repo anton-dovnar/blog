@@ -1,0 +1,19 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Bad Request {% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card card-profile">
+                <div class="card-body text-center">
+                    <h6 class="card-category text-gray">Error 400</h6>
+                    <h4 class="card-title">
+                        Bad Request
+                    </h4>
+                    <a href="{% url 'blog:post-list' %}" class="btn btn-primary btn-round">Home</a>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

@@ -56,12 +56,14 @@
             <div class="comments col-sm-12">
                 {% with comments.count as total_comments %}
                 <h2 class="col-sm-12">{{ total_comments }} comment{{ total_comments|pluralize }}</h2>
-                {% endwith %}
 
                 <div id="comments-list">
-                    <button class="btn btn-block btn-primary" onclick="showMore(this)">Show Previous</button>
+                    {% if total_comments > 3 %}
+                        <button class="btn btn-block btn-primary" onclick="showMore(this)">Show Previous</button>
+                    {% endif %}
                     {% include 'blog/post_comments.html' %}
                 </div>
+                {% endwith %}
             </div>
 
             <hr>
