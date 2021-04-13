@@ -1,2 +1,6 @@
 .vim/
 pg_data/
+Dockerfile.prod
+build_pro.sh
+scrapy*
+.*

@@ -12,6 +12,9 @@ django-taggit = "*"
 markdown = "*"
 psycopg2 = "*"
 scrapy = "*"
+gunicorn = "*"
+whitenoise = "*"
+dj-database-url = "*"
 
 [dev-packages]
 flake8 = "*"

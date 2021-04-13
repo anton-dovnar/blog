@@ -46,7 +46,7 @@
                 <div class="button-container">
                     <a href="{% url 'blog:post-share' post.published.year post.published.month post.published.day post.slug %}">
                         <button class="btn btn-icon btn-round btn-google">
-                            <i class="tim-icons icon-email-85"></i>
+                            <i class="far fa-envelope"></i>
                         </button>
                     </a>
                 </div>
@@ -153,7 +153,7 @@
                     $('#results').html(
                         "<div class='alert alert-danger'>" +
                           "<button type='button' aria-hidden='true' class='close' data-dismiss='alert' aria-label='Close'>" +
-                            "<i class='tim-icons icon-simple-remove'></i>" +
+                            "<i class='far fa-envelope'></i>" +
                           "</button>" +
                           `<span>${errmsg}</span>` +
                         "</div>"

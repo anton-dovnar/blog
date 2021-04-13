@@ -17,12 +17,9 @@
         <meta name="theme-color" content="#ffffff">
 
         <!--     Fonts and icons     -->
-        <link href="https://fonts.googleapis.com/css?family=Poppins:200,300,400,600,700,800" rel="stylesheet" />
-        <link href="https://use.fontawesome.com/releases/v5.0.6/css/all.css" rel="stylesheet">
-        <!-- Nucleo Icons -->
-        <link href="{% static '/assets/css/nucleo-icons.css' %}" rel="stylesheet" />
+        <link href="{% static 'assets/fontawesome/css/fontawesome-all.min.css' %}" rel="stylesheet">
         <!-- CSS Files -->
-        <link href="{% static '/assets/css/black-dashboard.min.css' %}" rel="stylesheet" />
+        <link href="{% static 'assets/css/black-dashboard.min.css' %}" rel="stylesheet" />
 
         <!-- Specific Page CSS goes HERE  -->
         {% block stylesheets %}{% endblock stylesheets %}
@@ -66,7 +63,7 @@
 
                             <ul class="navbar-nav ml-auto">
                                 <li class="search-bar input-group">
-                                    <button class="btn btn-link" id="search-button" data-toggle="modal" data-target="#searchModal"><i class="tim-icons icon-zoom-split" ></i>
+                                    <button class="btn btn-link" id="search-button" data-toggle="modal" data-target="#searchModal"><i class="fas fa-search"></i>
                                         <span class="d-lg-none d-md-block">Search</span>
                                     </button>
                                 </li>
@@ -83,7 +80,7 @@
                                     <input type="text" name="query" required="" id="id_query" class="form-control" placeholder="SEARCH">
                                 </form>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <i class="tim-icons icon-simple-remove"></i>
+                                    <i class="fas fa-times"></i>
                                 </button>
                             </div>
                         </div>
@@ -111,14 +108,14 @@
         </div>
 
         <!--   Core JS Files   -->
-        <script src="{% static '/assets/js/core/jquery.min.js' %}"></script>
-        <script src="{% static '/assets/js/core/popper.min.js' %}"></script>
-        <script src="{% static '/assets/js/core/bootstrap.min.js' %}"></script>
-        <script src="{% static '/assets/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
+        <script src="{% static 'assets/js/core/jquery.min.js' %}"></script>
+        <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
+        <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
+        <script src="{% static 'assets/js/plugins/perfect-scrollbar.jquery.min.js' %}"></script>
         <!--  Notifications Plugin    -->
-        <script src="{% static '/assets/js/plugins/bootstrap-notify.js' %}"></script>
+        <script src="{% static 'assets/js/plugins/bootstrap-notify.js' %}"></script>
         <!-- Control Center for Black Dashboard: parallax effects, scripts for the example pages etc -->
-        <script src="{% static '/assets/js/black-dashboard.min.js' %}"></script>
+        <script src="{% static 'assets/js/black-dashboard.min.js' %}"></script>
 
         <!-- Specific Page JS goes HERE  -->
         {% block javascripts %}{% endblock javascripts %}

@@ -70,3 +70,7 @@ Thumbs.db
 pyrightconfig.json
 .flake8
 .isort.cfg
+Dockerfile.prod
+build_pro.sh
+scrapy*
+.*
