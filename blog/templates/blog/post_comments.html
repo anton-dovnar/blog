@@ -1,0 +1,11 @@
+{% load humanize %}
+
+{% for comment in comments %}
+<div class="p-3 {% if forloop.revcounter > 3 %} prev {% endif %} {% if forloop.counter|divisibleby:2 %} text-right {% endif %}">
+    <hr>
+    <p class="text-danger">Comment {{ forloop.counter }} by <b>{{ comment.name }}</b> {{ comment.created|naturaltime }}</p>
+    <p class="px-5">{{ comment.body }}</p>
+</div>
+{% empty %}
+<p>There are no comments yet.</p>
+{% endfor %}

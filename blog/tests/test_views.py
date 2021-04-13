@@ -70,7 +70,7 @@ class ViewsTest(SetUpMixin, TestCase):
             'body': 'This is my first comment!'
         }
         response = self.client.post(url, data=data)
-        self.assertRedirects(response, self.post.get_absolute_url())
+        self.assertEqual(response.status_code, 200)
         self.assertEqual(response.resolver_match.func.__name__, PostDetail.as_view().__name__)
 
     def test_post_share_get(self):
@@ -82,7 +82,8 @@ class ViewsTest(SetUpMixin, TestCase):
 
         self.post.status = 'published'
         self.post.save()
-        response = self.client.get(reverse('blog:post-share', args=[self.post.pk]))
+        response = self.client.get(reverse('blog:post-share', args=[
+            self.post.published.year, self.post.published.month, self.post.published.day, self.post.slug]))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.resolver_match.func.__name__, PostShare.as_view().__name__)
         self.assertIn('form', response.context)
@@ -105,5 +106,6 @@ class ViewsTest(SetUpMixin, TestCase):
             'to': 'vasily@gmail.com',
             'comments': 'Hello, interesting content!',
         }
-        response = self.client.post(reverse('blog:post-share', args=[self.post.pk]), data=data)
+        response = self.client.post(reverse('blog:post-share', args=[
+            self.post.published.year, self.post.published.month, self.post.published.day, self.post.slug]), data=data)
         self.assertRedirects(response, reverse('blog:post-list'))

@@ -1,0 +1,64 @@
+{% extends 'layouts/base.html' %}
+
+{% block content %}
+<div class="row">
+    {% if messages %}
+        {% for message in messages %}
+        <div class="col-sm-8 mx-auto text-center alert alert-{{ message.level_tag }}">
+            <button type="button" aria-hidden="true" class="close" data-dismiss="alert" aria-label="Close">
+                <i class="tim-icons icon-simple-remove"></i>
+            </button>
+            <span>{{ message }}</span>
+        </div>
+        {% endfor %}
+    {% endif %}
+
+    <div class="col-sm-12">
+        {% if tag %}
+        <h2>Posts tagged with "{{ tag }}"</h2>
+        {% endif %}
+
+        <div class="card">
+            <div class="card-header ">
+                <h6 class="title d-inline">Posts</h6>
+            </div>
+            <div class="card-body ">
+                <div class="table-full-width">
+                    <table class="table">
+                        <tbody id="post-list">
+                            {% include 'blog/post_list_ajax.html' %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+<script>
+    $(document).ready(function(){
+        var page = 1;
+        var empty_page = false;
+        var block_request = false;
+        const content_div = $('#post-list')
+
+        $(window).scroll(function() {
+            var margin = $(document).height() - $(window).height() - 200;
+            if ($(window).scrollTop() > margin && empty_page == false && block_request == false) {
+                block_request = true;
+                page += 1;
+                $.get('?page=' + page, function(data) {
+                    if (data == '') {
+                        empty_page = true;
+                    } else {
+                        block_request = false;
+                        content_div.append(data);
+                    }
+                });
+            }
+        });
+    });
+</script>
+{% endblock javascripts %}

@@ -1,0 +1,169 @@
+{% extends 'layouts/base.html' %}
+
+{% load crispy_forms_field crispy_forms_tags blog_tags %}
+
+{% block title %} {{ post.title }} {% endblock title %}
+
+{% block stylesheets %}
+<style type="text/css" media="screen">
+    .prev {
+        display: none;
+    }
+</style>
+{% endblock stylesheets %}
+
+{% block content %}
+<div class="row">
+
+    <div class="col-md-12 col-lg-8 m-auto">
+        <div class="card card-user">
+            <div class="card-body">
+                <p class="card-text">
+                </p><div class="author">
+                    <div class="block block-one"></div>
+                    <div class="block block-two"></div>
+                    <div class="block block-three"></div>
+                    <div class="block block-four"></div>
+                    <h1 class="title">
+                        {{ post.title }}
+                    </h1>
+                    <p class="description">
+                        Author: <b>{{ post.author }}</b>
+                    </p>
+                    <p class="text-danger">
+                    Tags:
+                    {% for tag in post.tags.all %}
+                    <a href="{% url 'blog:post-list-by-tag' tag.slug %}">{{ tag.name }}</a>
+                    {% if not forloop.last %}, {% endif %}
+                    {% endfor %}
+                    </p>
+                </div>
+                <div class="card-description">
+                    {{ post.body|markdown }}
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="button-container">
+                    <a href="{% url 'blog:post-share' post.published.year post.published.month post.published.day post.slug %}">
+                        <button class="btn btn-icon btn-round btn-google">
+                            <i class="tim-icons icon-email-85"></i>
+                        </button>
+                    </a>
+                </div>
+            </div>
+
+
+            <div class="comments col-sm-12">
+                {% with comments.count as total_comments %}
+                <h2 class="col-sm-12">{{ total_comments }} comment{{ total_comments|pluralize }}</h2>
+                {% endwith %}
+
+                <div id="comments-list">
+                    <button class="btn btn-block btn-primary" onclick="showMore(this)">Show Previous</button>
+                    {% include 'blog/post_comments.html' %}
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="send-comment col-sm-12 my-5">
+                <form id="comment-form" method="POST">
+                    {% csrf_token %}
+
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ form.name|as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ form.email|as_crispy_field }}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-12">
+                            {{ form.body|as_crispy_field }}
+                        </div>
+                    </div>
+
+                    <div class="card-footer">
+                        <button type="submit" class="btn btn-fill btn-primary">Send</button>
+                    </div>
+                </form>
+                <div id="results">
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-4 col-md-12">
+        <div class="card ">
+            <div class="card-header">
+                <h2 class="card-title">Similar Blog Posts ({{ similar_posts.count }})</h2>
+            </div>
+            <div class="card-body">
+                {% for post in similar_posts %}
+                <hr>
+                <p class="h4"><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></p>
+                {% empty %}
+                <p>There are no similar posts yet.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascripts %}
+<script charset="utf-8">
+    function showMore(el) {
+        let $prev = $(".prev");
+
+        if ($prev.css("display") == "none") {
+            el.innerHTML = "Hide";
+            $prev.show()
+        } else {
+            el.innerHTML = "Show Previous";
+            $prev.hide();
+        }
+    }
+
+    $(document).ready(function(){
+        function create_post() {
+            var $comments = $("#comments-list");
+
+            $.ajax({
+                type : "POST",
+                data : {
+                    name : $('#id_name').val(),
+                    email: $('#id_email').val(),
+                    body: $('#id_body').val(),
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                },
+
+                success : function(data, status, xhttp) {
+                    $("#comment-form").find("input, textarea").val("");
+                    $comments.html(data);
+                },
+
+                error : function(xhr, errmsg, err) {
+                    $('#results').html(
+                        "<div class='alert alert-danger'>" +
+                          "<button type='button' aria-hidden='true' class='close' data-dismiss='alert' aria-label='Close'>" +
+                            "<i class='tim-icons icon-simple-remove'></i>" +
+                          "</button>" +
+                          `<span>${errmsg}</span>` +
+                        "</div>"
+                    );
+                    console.log(xhr.status + ": " + xhr.responseText);
+                }
+            });
+        };
+        $('#comment-form').on('submit', function(event){
+            event.preventDefault();
+            create_post();
+        });
+    });
+</script>
+{% endblock javascripts %}
