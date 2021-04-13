@@ -11,6 +11,7 @@ django-crispy-forms = "*"
 django-taggit = "*"
 markdown = "*"
 psycopg2 = "*"
+scrapy = "*"
 
 [dev-packages]
 flake8 = "*"
