@@ -19,6 +19,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.urls import include, path
 
 from blog.sitemaps import PostSitemap
+from blog.views import bad_request, page_not_found, permission_denied, server_error
 
 sitemaps = {
     'posts': PostSitemap,
@@ -27,8 +28,17 @@ sitemaps = {
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('blog.urls')),
+    path('400/', bad_request),
+    path('403/', permission_denied),
+    path('404/', page_not_found),
+    path('500/', server_error),
     path('sitemap.xml', sitemap, {'sitemaps': sitemaps}, name='django.contrib.sitemaps.views.sitemap'),
 ]
+
+handler400 = 'blog.views.response_error_400'
+handler403 = 'blog.views.response_error_403'
+handler404 = 'blog.views.response_error_404'
+handler500 = 'blog.views.response_error_500'
 
 if settings.DEBUG:
     import debug_toolbar

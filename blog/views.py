@@ -1,6 +1,9 @@
 from django.contrib.messages.views import SuccessMessageMixin
 from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
+from django.core.exceptions import PermissionDenied, SuspiciousOperation
+from django.template import loader
 from django.db.models import Count
+from django.http import Http404, HttpResponseServerError
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.decorators import method_decorator
@@ -11,6 +14,39 @@ from taggit.models import Tag
 
 from .forms import CommentForm, EmailPostForm, SearchForm
 from .models import Post
+
+
+def response_error_400(request, exception=None):
+    return render(request, 'layouts/page-400.html', status=400)
+
+
+def bad_request(request):
+    raise SuspiciousOperation
+
+
+def response_error_403(request, exception=None):
+    return render(request, 'layouts/page-403.html', status=403)
+
+
+def permission_denied(request):
+    raise PermissionDenied
+
+
+def response_error_404(request, exception=None):
+    return render(request, 'layouts/page-404.html', status=404)
+
+
+def page_not_found(request):
+    raise Http404
+
+
+def response_error_500(request):
+    return render(request, 'layouts/page-500.html', status=500)
+
+
+def server_error(request):
+    template = loader.get_template('layouts/page-500.html')
+    return HttpResponseServerError(template.render())
 
 
 class PostList(generic.ListView):
